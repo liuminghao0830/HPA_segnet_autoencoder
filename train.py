@@ -24,15 +24,15 @@ keras.backend.clear_session()
 
 # Datasets
 train_data_path = '../../train/'
-label_path = '../train.csv'
+label_path = '../../train.csv'
 train_dataset_info = read_train_info(label_path, train_data_path)
 
 # create callbacks list
-epochs = 20; batch_size = 16
+epochs = 50; batch_size = 16
 checkpoint = ModelCheckpoint('segnet_autoencoder.h5', monitor='val_acc', verbose=1, 
                              save_best_only=True, mode='max', save_weights_only = True)
-#reduceLROnPlat = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=3, 
-#                                   verbose=1, mode='auto', epsilon=0.0001)
+reduceLROnPlat = ReduceLROnPlateau(monitor='val_loss', factor=0.2, patience=5, 
+                                   verbose=1, mode='auto', epsilon=0.0001)
 #early = EarlyStopping(monitor="val_loss", 
 #                      mode="min", 
 #                      patience=6)
@@ -53,7 +53,7 @@ validation_generator = data_generator.create_train(
 # create model
 train_model = segnet_model(input_shape=input_shape, n_labels=28)
 
-adam = Adam(lr=1e-4, beta_1=0.9, beta_2=0.999, epsilon=1e-8, decay=0.003)
+adam = Adam(lr=1e-4)
 
 train_model.compile(loss='mean_squared_error', optimizer=adam, metrics=['acc'])
 
